@@ -1,9 +1,19 @@
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { authContext } from "../../contexts/authContext";
 
 const LoginForm = () => {
+  const { login } = useContext(authContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+  function handleSave() {
+    let formData = new FormData();
+    formData.append("email", email);
+    formData.append("password", password);
+    login(formData, email, navigate);
+  }
   return (
     <Container maxWidth="sm">
       <Box display={"flex"} flexDirection={"column"} marginTop={"50px"}>
@@ -20,7 +30,9 @@ const LoginForm = () => {
           label="Password"
           variant="outlined"
         />
-        <Button variant="contained">Login</Button>
+        <Button onClick={handleSave} variant="contained">
+          Login
+        </Button>
       </Box>
     </Container>
   );
