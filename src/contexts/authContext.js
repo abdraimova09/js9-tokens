@@ -37,8 +37,8 @@ const AuthContextProvider = ({ children }) => {
   }
   async function checkAuth() {
     setLoading(true);
-    const token = JSON.parse(localStorage.getItem("token"));
     try {
+      const token = JSON.parse(localStorage.getItem("token"));
       const Authorization = `Bearer ${token.access}`;
       const config = {
         headers: {
