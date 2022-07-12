@@ -12,12 +12,19 @@ import {
 } from "@mui/material";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import React, { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { productsContext } from "../../contexts/productsContext";
+import Loader from "../Loader/Loader";
 
-const AddProduct = () => {
-  const { createProduct, getCategories, categories } =
-    useContext(productsContext);
+const EditProduct = () => {
+  const { id } = useParams();
+  const {
+    getCategories,
+    categories,
+    getOneProduct,
+    oneProduct,
+    updateProduct,
+  } = useContext(productsContext);
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -26,22 +33,36 @@ const AddProduct = () => {
   const [image, setImage] = useState(null);
   useEffect(() => {
     getCategories();
+    getOneProduct(id);
   }, []);
-  console.log(category);
+  useEffect(() => {
+    if (oneProduct) {
+      setTitle(oneProduct.title);
+      setDescription(oneProduct.description);
+      setPrice(oneProduct.price);
+      setCategory(oneProduct.category.id);
+    }
+  }, [oneProduct]);
+  console.log(oneProduct);
   function handleSave() {
     let formData = new FormData();
     formData.append("title", title);
     formData.append("description", description);
     formData.append("price", price);
-    formData.append("category", category);
-    formData.append("image", image);
-    createProduct(formData);
+    formData.append("category", 1);
+    if (image) {
+      formData.append("image", image);
+    }
+    updateProduct(formData, id);
     navigate("/products");
+  }
+  if (!oneProduct) {
+    return <Loader />;
   }
   return (
     <Container maxWidth="sm">
       <Box display={"flex"} flexDirection={"column"}>
-        <Typography variant="h6">Add product</Typography>
+        <Typography variant="h6">Edit product</Typography>
         <TextField
           value={title}
           onChange={e => setTitle(e.target.value)}
@@ -92,6 +113,7 @@ const AddProduct = () => {
         />
         <label htmlFor="button-file">
           <IconButton color="primary" component="span">
+            Select new
             <PhotoCamera />
           </IconButton>
           {image && <Typography variant="span">{image.name}</Typography>}
@@ -104,4 +126,4 @@ const AddProduct = () => {
   );
 };
 
-export default AddProduct;
+export default EditProduct;

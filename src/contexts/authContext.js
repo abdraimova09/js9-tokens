@@ -8,6 +8,7 @@ const API = "https://backend-for-fs-makers.herokuapp.com/api/v1";
 const AuthContextProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState("");
   const [error, setError] = useState(false);
+  const [loginError, setLoginError] = useState(false);
   const [loading, setLoading] = useState(false);
   async function register(user, navigate) {
     console.log(user);
@@ -32,7 +33,8 @@ const AuthContextProvider = ({ children }) => {
       setCurrentUser(email);
       navigate("/");
     } catch (e) {
-      console.log(e);
+      // console.log(e);
+      setLoginError(e.response.data.detail);
     }
   }
   async function checkAuth() {
@@ -56,7 +58,7 @@ const AuthContextProvider = ({ children }) => {
       );
       const email = localStorage.getItem("email");
       setCurrentUser(email);
-      console.log(res);
+      // console.log(res);
     } catch (e) {
       console.log(e);
       logout();
@@ -75,6 +77,7 @@ const AuthContextProvider = ({ children }) => {
         currentUser,
         error,
         loading,
+        loginError,
         register,
         login,
         checkAuth,

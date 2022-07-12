@@ -1,10 +1,17 @@
-import { Box, Button, Container, TextField, Typography } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  Container,
+  TextField,
+  Typography,
+} from "@mui/material";
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { authContext } from "../../contexts/authContext";
 
 const LoginForm = () => {
-  const { login } = useContext(authContext);
+  const { login, loginError } = useContext(authContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -18,6 +25,7 @@ const LoginForm = () => {
     <Container maxWidth="sm">
       <Box display={"flex"} flexDirection={"column"} marginTop={"50px"}>
         <Typography variant="h5">Login</Typography>
+        {loginError ? <Alert severity="error">{loginError}</Alert> : null}
         <TextField
           value={email}
           onChange={e => setEmail(e.target.value)}
